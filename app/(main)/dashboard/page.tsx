@@ -11,8 +11,9 @@ const DashboardPage = async () => {
     }
 
     return (
-        <div>
-            Enter
+        <div className="w-[70%] bg-white p-16 space-y-9">
+            <p className="font-bold text-5xl">Recent Chats</p>
+            <p>Nothing to see here...</p>
         </div>
     );
 }

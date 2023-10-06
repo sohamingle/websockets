@@ -2,12 +2,12 @@ import Image from 'next/image';
 import chatLogo from '@/public/chatLogo.png'
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem } from "@nextui-org/navbar";
 import Link from 'next/link';
-import AvatarProvider from '@/providers/avatar-provider';
+import { Button } from '@nextui-org/button';
 
 const NavbarComponent = async () => {
 
     return (
-        <Navbar maxWidth='full' className='shadow-black shadow-sm px-12'>
+        <Navbar isBlurred={false} maxWidth='full'className=' shadow-black shadow-sm px-12'>
             <Link href={'/'}>
                 <NavbarBrand className='space-x-3'>
                     <Image
@@ -21,7 +21,7 @@ const NavbarComponent = async () => {
             </Link>
             <NavbarContent justify='end'>
                 <NavbarItem>
-                    <AvatarProvider/>
+                    <Button as={Link} href='/api/auth/signin' variant='ghost' color='primary'>Login</Button>
                 </NavbarItem>
             </NavbarContent>
         </Navbar>

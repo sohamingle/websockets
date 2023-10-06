@@ -1,28 +1,27 @@
 "use client"
 
 import React from "react";
-import {Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Avatar, Button} from "@nextui-org/react";
-import { signIn, signOut, useSession } from "next-auth/react";
+import {Button, User} from "@nextui-org/react";
+import { signOut, useSession } from "next-auth/react";
+import { LogOutIcon } from "lucide-react";
 
 export default function NavAvatar() {
-    const session = useSession()     
-    
+  const session = useSession()
+
+  const imageSrc = session.data?.user ? session.data.user.image : ' '
+
   return (
-    session.data?.user ?
-    <Dropdown placement="bottom-end">
-        <DropdownTrigger>
-          <Avatar
-            isBordered
+    <div className="space-x-28 flex items-center px-16">
+        <User
             as="button"
-            className="transition-transform"
-            src={session.data?.user?.image || ''}
+            avatarProps={{
+              isBordered: true,
+              src: session.data?.user?.image! || '',
+            }}
+            className="transition-transform space-x-4"
+            name={session.data?.user?.name}
           />
-        </DropdownTrigger>
-        <DropdownMenu aria-label="Profile Actions" variant="flat">
-          <DropdownItem>{session.data.user.name}</DropdownItem>
-          <DropdownItem onClick={()=>signOut()} color="danger" >Log Out</DropdownItem>
-        </DropdownMenu>
-      </Dropdown>
-    : <Button onClick={()=>signIn()} color="primary" variant="ghost">Login</Button>
+          <Button isIconOnly onClick={()=>signOut()} ><LogOutIcon/></Button>
+          </div>
   );
 }
