@@ -19,6 +19,8 @@ interface UserType {
         receivedFriendRequests:FriendRequest[];
 }
 
+export const revalidate = 0
+
 const AddPage = async ({ searchParams }: { searchParams: { search: string } }) => {
 
     const session = await getServerSession(authOptions)

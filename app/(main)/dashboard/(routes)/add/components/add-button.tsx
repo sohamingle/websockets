@@ -5,7 +5,9 @@ import { Friend, FriendRequest } from "@prisma/client";
 import axios from "axios";
 import { UserPlus2Icon } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 interface FriendProps {
     friend: {
@@ -20,10 +22,12 @@ interface FriendProps {
     }
 }
 
+
 const AddButton: React.FC<FriendProps> = ({ friend }) => {
 
     const [disabled,setDisabled] = useState(false)
     const session = useSession()
+    const router = useRouter()
 
     const handleClick = () => {
         try {
@@ -32,10 +36,13 @@ const AddButton: React.FC<FriendProps> = ({ friend }) => {
                 senderId: session.data?.user.userId as string,
                 receiverId: friend.id as string,
             })
+            toast.success('Friend Request Sent')
         } catch (error) {
             console.log(error)
+            toast.error('Something went wrong')
         }finally{
             setDisabled(false)
+            router.refresh()
         }
     }
 

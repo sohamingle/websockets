@@ -3,7 +3,6 @@ import { NextResponse } from "next/server";
 
 export async function POST(req:Request){
     const {senderId , receiverId } = await req.json();
-    console.log(senderId, receiverId);
     const user = await prisma.user.findFirst({
         where:{
             id:senderId

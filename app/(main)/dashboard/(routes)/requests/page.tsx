@@ -6,6 +6,8 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import HandleRequest from "./components/handle-request";
 
+export const revalidate = 0
+
 const RequestsPage = async () => {
     const session = await getServerSession(authOptions)
     if(!session?.user){

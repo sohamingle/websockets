@@ -14,25 +14,27 @@ model Chat {
   friendUser Friend   @relation(fields: [toUserId], references: [friendId])
   toUserId   String   @db.ObjectId
   text       String
-  createdAt  DateTime @db.Timestamp @default(now())
+  createdAt  DateTime @default(now()) @db.Timestamp
 }
 
 model Friend {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  friendUser User     @relation(fields: [friendId], references: [id])
+  user       User     @relation("UserToFriend", fields: [userId], references: [id])
+  userId     String   @unique @db.ObjectId
+  friendUser User     @relation("FriendToUser", fields: [friendId], references: [id])
   friendId   String   @unique @db.ObjectId
   chats      Chat[]
-  createdAt  DateTime @db.Timestamp @default(now())
+  createdAt  DateTime @default(now()) @db.Timestamp
 }
 
 model FriendRequest {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
   sender     User     @relation("SentFriendRequests", fields: [senderId], references: [id])
-  senderId   String   @db.ObjectId
+  senderId   String   @db.ObjectId @unique
   receiver   User     @relation("ReceivedFriendRequests", fields: [receiverId], references: [id])
-  receiverId String   @db.ObjectId
+  receiverId String   @db.ObjectId @unique
   status     String // Pending, Accepted, Rejected
-  createdAt  DateTime @db.Timestamp @default(now())
+  createdAt  DateTime @default(now()) @db.Timestamp
 }
 
 model User {
@@ -41,7 +43,8 @@ model User {
   email                  String?         @unique
   emailVerified          DateTime?
   image                  String?
-  friends                Friend[]
+  friends                Friend[]        @relation("UserToFriend")
+  friendOf               Friend[]        @relation("FriendToUser")
   sentFriendRequests     FriendRequest[] @relation("SentFriendRequests")
   receivedFriendRequests FriendRequest[] @relation("ReceivedFriendRequests")
   chats                  Chat[]
