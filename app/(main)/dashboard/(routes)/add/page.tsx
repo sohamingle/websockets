@@ -6,6 +6,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
 import AddButton from "./components/add-button";
 import { Friend, FriendRequest } from "@prisma/client";
+import { Divider } from "@nextui-org/divider";
 
 interface UserType {
         id: string | null;
@@ -31,6 +32,9 @@ const AddPage = async ({ searchParams }: { searchParams: { search: string } }) =
             name: {
                 contains:searchQuery,
                 mode:'insensitive'
+            },
+            id:{
+                not:session.user.userId
             }
         },
         take:10,
@@ -44,9 +48,12 @@ const AddPage = async ({ searchParams }: { searchParams: { search: string } }) =
     return (
         <div className="w-[70%] bg-white space-y-9 p-16">
             <p className="font-bold text-5xl mb-9">Add Friends</p>
+            <Divider />
+            <div className="mt-4">
             <SearchProvider />
             {results.map((result) => (
-                <div key={result.id} className="flex gap-8">
+                <div key={result.id} className="">
+                    <div className="flex items-center my-6 gap-8">
                     <User
                         className="space-x-4"
                         name={result.name}
@@ -56,8 +63,10 @@ const AddPage = async ({ searchParams }: { searchParams: { search: string } }) =
                         }}
                     />
                     <AddButton friend={result}/>
+                    </div>
                 </div>
             ))}
+            </div>
         </div>
     );
 }

@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 
 export async function POST(req:Request){
     const {senderId , receiverId } = await req.json();
+    console.log(senderId, receiverId);
     const user = await prisma.user.findFirst({
         where:{
             id:senderId
@@ -24,7 +25,6 @@ export async function POST(req:Request){
         return new NextResponse("request already sent",{status:404})
     }
     const friendRequest = await prisma.friendRequest.create({
-        //@ts-ignore
         data:{
             senderId,
             receiverId,

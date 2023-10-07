@@ -31,8 +31,8 @@ const SearchBar = () => {
   },[query])
 
   return (
-    <label htmlFor="search">
-      Search
+    <label className="space-y-2" htmlFor="search">
+      <p>Search</p>
       <Input
         isClearable
         onValueChange={setQuery}

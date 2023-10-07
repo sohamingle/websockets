@@ -1,6 +1,6 @@
 "use client"
 
-import { Button } from "@nextui-org/react";
+import { Button,Tooltip } from "@nextui-org/react";
 import { Friend, FriendRequest } from "@prisma/client";
 import axios from "axios";
 import { UserPlus2Icon } from "lucide-react";
@@ -29,7 +29,7 @@ const AddButton: React.FC<FriendProps> = ({ friend }) => {
         try {
             setDisabled(true)
             axios.post('/api/add',{
-                senderId: session.data?.user.id as string,
+                senderId: session.data?.user.userId as string,
                 receiverId: friend.id as string,
             })
         } catch (error) {
@@ -39,14 +39,37 @@ const AddButton: React.FC<FriendProps> = ({ friend }) => {
         }
     }
 
-    if(session.data && (session.data.user.id in (friend.friends || friend.receivedFriendRequests || friend.receivedFriendRequests))){
-        setDisabled(true)
+    const alreadyAdded = friend.friends.find(item => item.friendId === session.data?.user.userId)
+    
+    const alreadySent = friend.receivedFriendRequests.find(item => item.senderId === session.data?.user.userId)
+
+    const alreadyReceived = friend.sentFriendRequests.find(item => item.receiverId === session.data?.user.userId)
+
+    let tooltipContext =''
+    if(alreadyAdded){
+        tooltipContext = 'already added'
+    }else if(alreadyReceived){
+        tooltipContext = 'already received'
+    }else if(alreadySent){
+        tooltipContext = 'already sent'
     }
 
-    if(friend.id )
-
     return (
-        <Button isIconOnly isDisabled={disabled} onClick={handleClick}><UserPlus2Icon size={20} /></Button>
+        <>
+        {
+            alreadyAdded || alreadyReceived || alreadySent ? (
+              <Tooltip content={tooltipContext}>
+                <Button className="cursor-not-allowed" isIconOnly>
+                  <UserPlus2Icon size={20} />
+                </Button>
+              </Tooltip>
+            ) : (
+              <Button isIconOnly isDisabled={disabled} color="primary" onClick={handleClick}>
+                <UserPlus2Icon size={20} />
+              </Button>
+            )
+          }
+          </>
     );
 }
 
