@@ -6,3 +6,9 @@ html,body{
    height: 100%; 
    margin: 0;
 }
+
+.chatBackground{
+   background-image: url('../public/chatBG.png');
+   background-repeat: no-repeat;
+   background-size: cover;
+}

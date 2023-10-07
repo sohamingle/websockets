@@ -26,7 +26,9 @@ const HandleRequest = ({ friend }: { friend: User }) => {
             toast.error('Something went wrong');
         }finally{
             setLoading(false)
-            router.refresh()
+            setTimeout(()=>{
+                router.refresh()
+            },1000)
         }
     }
 
@@ -47,10 +49,10 @@ const HandleRequest = ({ friend }: { friend: User }) => {
 
     return (
         <div className="flex items-center gap-x-3">
-            <Button onClick={handleAdd} isIconOnly isLoading={loading} size="sm" color="success">
+            <Button onClick={handleAdd} isIconOnly isDisabled={loading} size="sm" color="success">
                 <UserPlus2Icon color="white" size={18} />
             </Button>
-            <Button onClick={handeleDelete} isLoading={loading} isIconOnly size="sm" color="danger">
+            <Button onClick={handeleDelete} isDisabled={loading} isIconOnly size="sm" color="danger">
                 <TrashIcon color="white" size={18} />
             </Button>
         </div>

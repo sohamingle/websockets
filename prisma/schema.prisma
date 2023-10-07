@@ -9,11 +9,12 @@ datasource db {
 
 model Chat {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  fromUser   User     @relation(fields: [fromUserId], references: [id])
-  fromUserId String   @db.ObjectId
-  friendUser Friend   @relation(fields: [toUserId], references: [friendId])
+  fromUser   User     @relation("UserToFriend", fields: [fromUserId], references: [id])
+  fromUserId String   @db.ObjectId 
+  friendUser User     @relation("FriendToUser", fields: [toUserId], references: [id])
   toUserId   String   @db.ObjectId
   text       String
+  channelKey String
   createdAt  DateTime @default(now()) @db.Timestamp
 }
 
@@ -23,16 +24,16 @@ model Friend {
   userId     String   @unique @db.ObjectId
   friendUser User     @relation("FriendToUser", fields: [friendId], references: [id])
   friendId   String   @unique @db.ObjectId
-  chats      Chat[]
+  channelKey String 
   createdAt  DateTime @default(now()) @db.Timestamp
 }
 
 model FriendRequest {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
   sender     User     @relation("SentFriendRequests", fields: [senderId], references: [id])
-  senderId   String   @db.ObjectId @unique
+  senderId   String   @unique @db.ObjectId
   receiver   User     @relation("ReceivedFriendRequests", fields: [receiverId], references: [id])
-  receiverId String   @db.ObjectId @unique
+  receiverId String   @unique @db.ObjectId
   status     String // Pending, Accepted, Rejected
   createdAt  DateTime @default(now()) @db.Timestamp
 }
@@ -47,7 +48,8 @@ model User {
   friendOf               Friend[]        @relation("FriendToUser")
   sentFriendRequests     FriendRequest[] @relation("SentFriendRequests")
   receivedFriendRequests FriendRequest[] @relation("ReceivedFriendRequests")
-  chats                  Chat[]
+  sentChats              Chat[]          @relation("UserToFriend")
+  receivedChats          Chat[]          @relation("FriendToUser")
   accounts               Account[]
   sessions               Session[]
 }

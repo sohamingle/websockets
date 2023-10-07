@@ -1,11 +1,13 @@
 import { UserIcon, UserPlusIcon } from "lucide-react";
-import NavAvatar from "./utils/avatar";
 import { Button } from "@nextui-org/button";
 import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import prisma from "@/utils/prisma-client";
 import { User } from "@nextui-org/user";
+import NavAvatarProvider from "@/providers/navAvatar-provider";
+
+export const revalidate = 0
 
 const SideNav = async () => {
     const session = await getServerSession(authOptions)
@@ -39,7 +41,8 @@ const SideNav = async () => {
                     {friends.map(friend => (
                         <div key={friend.id}>
                             <User
-                                as="button"
+                                as={Link}
+                                href={`/dashboard/chat/${friend.id}`}
                                 avatarProps={{
                                     isBordered: true,
                                     src:friend.image || '',
@@ -52,7 +55,7 @@ const SideNav = async () => {
                 </div>
             </div>
             <div className="mb-8">
-                <NavAvatar />
+                <NavAvatarProvider/>
             </div>
         </nav>
     );

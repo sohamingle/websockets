@@ -1,4 +1,3 @@
-import NavbarComponent from "@/components/Navbar"
 import SideNav from "@/components/SideNav"
 
 
