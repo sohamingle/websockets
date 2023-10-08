@@ -1,4 +1,4 @@
-import { NextApiResponseServerIo } from '@/types/types';
+import { ChatwithUserandFriend, NextApiResponseServerIo } from '@/types/types';
 import prisma from '@/utils/prisma-client';
 import { NextApiRequest } from 'next';
 
@@ -39,11 +39,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
                 toUserId: friendId,
                 text: text,
                 channelKey: channelKey
+            },
+            include:{
+                fromUser:true,
+                friendUser:true
             }
         })
 
-        res?.socket?.server?.io?.emit(channelKey,text)
-        return res.status(200).json(text)
+        return res.status(200).json(chatFromUser)
     }
     } catch (error) {
         console.log(error)

@@ -1,7 +1,8 @@
+import { ChatwithUserandFriend, NextApiRequestServerIo, NextApiResponseServerIo } from "@/types/types";
 import prisma from "@/utils/prisma-client";
 import { NextResponse } from "next/server";
 
-export async function GET(req:Request,{params:{channelKey}}:{params:{channelKey:string}}){
+export async function GET(req:NextApiRequestServerIo,{params:{channelKey}}:{params:{channelKey:string}}){
     if(!channelKey){
         return new NextResponse("Invalid",{status:500})
     }
@@ -11,9 +12,9 @@ export async function GET(req:Request,{params:{channelKey}}:{params:{channelKey:
         }
     })
     if(!relation){
-        return new NextResponse("Invalid",{status:500})
+        return new NextResponse("Invalid",{status:404})
     }
-    const chats = await prisma.chat.findMany({
+    const chats:ChatwithUserandFriend[] = await prisma.chat.findMany({
         take:10,
         where:{
             channelKey
@@ -24,7 +25,10 @@ export async function GET(req:Request,{params:{channelKey}}:{params:{channelKey:
         },
         orderBy:{
             createdAt: "desc"
-        }
+        } 
     })
+
+    
+    
     return NextResponse.json(chats,{status:200})
 }

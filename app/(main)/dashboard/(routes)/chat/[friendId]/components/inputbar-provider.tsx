@@ -1,9 +1,9 @@
 "use client"
 
 import { useEffect, useState } from "react";
-import InputBar from "./input-bar";
+import Chats from "./chats";
 
-const InputbarProvider = ({friendId}:{friendId:string}) => {
+const InputbarProvider = ({friendId,channelKey}:{friendId:string,channelKey:string}) => {
     const [isMounted,setIsMounted] = useState(false)
     useEffect(()=>{
         setIsMounted(true)
@@ -13,7 +13,7 @@ const InputbarProvider = ({friendId}:{friendId:string}) => {
     }
     return (
         <div>
-            <InputBar friendId={friendId}/>
+            <Chats friendId={friendId} channelKey={channelKey}/>
         </div>
     );
 }

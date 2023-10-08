@@ -1,7 +1,7 @@
 import { NextApiRequest } from "next";
-import { Server as ServerIO } from "socket.io";
+import { Server as ServerIO, Socket } from "socket.io";
 import { Server as NetServer } from "http";
-import { NextApiResponseServerIo } from "@/types/types";
+import { ChatwithUserandFriend, NextApiResponseServerIo } from "@/types/types";
 
 export const config = {
     api: {
@@ -17,10 +17,30 @@ const SocketHandler = (req: NextApiRequest, res: NextApiResponseServerIo)=>{
         const path = '/api/socket/io'
         const httpServer:NetServer = res.socket.server as any
         const io = new ServerIO(httpServer,{
+            pingTimeout:60000,
             path: path,
             addTrailingSlash:false
         })
         res.socket.server.io = io
+        io.on('connection',(socket:Socket)=>{
+            console.log("Connection established")
+            socket.on("setup",(userId:string)=>{
+                socket.join(userId)
+                socket.emit("connected")
+                console.log('user: ',userId)
+            })
+
+            socket.on("join chat",(channelKey:string)=>{
+                socket.join(channelKey)
+                console.log("user joined chat",channelKey)
+            })
+            socket.on("new message",(newMessage:ChatwithUserandFriend)=>{
+                if(!newMessage) return null
+                const newChat = newMessage
+                console.log(newChat)
+                socket.in(newChat.channelKey).emit("message received", newChat);
+            })
+        })
     }
     res.end()
 }
